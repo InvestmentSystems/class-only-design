@@ -1,7 +1,7 @@
 """
-MetaFunctions is a function composition and data pipelining library.
+class-only-design is a collection of tools for class only design.
 
-For more information, please visit the `project on github <https://github.com/ForeverWintr/metafunctions>`_.
+For more information, please visit the `project on github <https://github.com/ForeverWintr/class-only-design>`_.
 """
 
 import os
@@ -56,7 +56,7 @@ class UploadCommand(Command):
 setup(
     name=class_only_design.__name__,
     version=class_only_design.__version__,
-    description="Metafunctions is a function composition and data pipelining library",
+    description="Tools for class only design.",
     long_description=__doc__,
     url="https://github.com/ForeverWintr/class-only-design",
     author=class_only_design.__author__,
@@ -71,7 +71,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
     ],
-    keywords="functional-programming function-composition",
+    keywords="functional-programming singleton immutability",
     packages=find_packages(),
     test_suite="class_only.tests",
     # install_requires='',
