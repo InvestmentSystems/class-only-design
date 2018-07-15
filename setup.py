@@ -58,7 +58,7 @@ setup(
     version=class_only_design.__version__,
     description="Metafunctions is a function composition and data pipelining library",
     long_description=__doc__,
-    url="https://github.com/ForeverWintr/metafunctions",
+    url="https://github.com/ForeverWintr/class-only-design",
     author=class_only_design.__author__,
     author_email=class_only_design.__email__,
     license="MIT",
