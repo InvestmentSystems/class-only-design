@@ -67,11 +67,13 @@ class TestClassOnly(unittest.TestCase):
 
     def test_property(self):
         class A:
-            @property
-            def a(self):
-                return 5
+            bad_state = 0
 
-            # class myprop
+            @api.constant
+            def a(cls):
+                cls.bad_state += 1
+                return 5 + cls.bad_state
 
         a = A()
-        self.fail()
+        self.assertEqual(A.a, 6)
+        self.assertEqual(a.a, 6)
