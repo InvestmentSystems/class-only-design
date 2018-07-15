@@ -8,6 +8,7 @@ name = "pypi"
 [dev-packages]
 coverage = "*"
 tox = "*"
+black = "*"
 
 [requires]
 python_version = "3.7"

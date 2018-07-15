@@ -9,12 +9,12 @@ import functools
 
 class OnlyMeta(type):
     def __new__(cls, name, bases, classdict):
-        #Disallow bases that have __new__ or __init__ defined
+        # Disallow bases that have __new__ or __init__ defined
         for b in bases:
             if b.__init__ is not object.__init__:
-                raise TypeError('Class Only classes cannot define __init__', b)
+                raise TypeError("Class Only classes cannot define __init__", b)
             if b.__new__ is not object.__new__:
-                raise TypeError('Class Only classes cannot define __new__', b)
+                raise TypeError("Class Only classes cannot define __new__", b)
         return super().__new__(cls, name, bases, classdict)
 
     def __setattr__(cls, name, arg):
@@ -38,3 +38,11 @@ def class_only(cls):
 
     Only._finished_decoration = True
     return Only
+
+
+class constant:
+    """
+    A method decorator similar to @property but for use on class only classes. The decorated method
+    is only called once. Subsequent calls simply return the stored value. This is usefull for
+    declaring a class level constant that is not actually created until it's used.
+    """
