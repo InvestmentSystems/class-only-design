@@ -10,6 +10,12 @@ A 'Class Only Design' is an attempt to merge some aspects of Object Oriented and
 * embraces the functional concept of immutability over changing state.
 
 A *class only* class is, in other words, an approach for creating an immutable singleton object.
+
+### Installation
+
+```bash
+pip install class_only_design
+```
 ________
 
 The `class_only` decorator enforces class only design:
