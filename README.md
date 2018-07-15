@@ -3,7 +3,7 @@
 
 ## Tools for class only design. 
 
-A 'Class Only' design is an attempt to merge some aspects of Object Oriented and Functional programming. Specifically, it:
+A 'Class Only Design' is an attempt to merge some aspects of Object Oriented and Functional programming. Specifically, it:
 
 * allows you to group like functions and attributes in a common namespace,  
 * lets you use inheritance to override certain functions, e.g., to implement the [template pattern](https://en.wikipedia.org/wiki/Template_method_pattern),
@@ -16,7 +16,7 @@ The `class_only` decorator enforces class only design:
 
 ```python
 
-from class_only import class_only
+from class_only_design import class_only
 
 @class_only
 class VeryFunctional:
@@ -79,7 +79,7 @@ class Methodology:
 The time cost of calling `read_large_config_file` is incurred when `Methodology` is created, which for most classes means module load time. To address this issue, class_only provides the `constant` decorator. Decorating a method with `@constant` creates a class property that is called at most once. Using `constant`, the above example becomes:
 
 ```python
-from class_only import constant
+from class_only_design import constant
 
 @class_only
 class Methodology:
