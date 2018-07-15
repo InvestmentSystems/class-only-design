@@ -66,14 +66,16 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(Test.__name__, "Test")
 
     def test_property(self):
-        class A:
-            bad_state = 0
+        bad_state = 0
 
+        class A:
             @api.constant
             def a(cls):
-                cls.bad_state += 1
-                return 5 + cls.bad_state
+                nonlocal bad_state
+                bad_state += 1
+                return 5 + bad_state
 
         a = A()
+        self.assertEqual(A.a, 6)
         self.assertEqual(A.a, 6)
         self.assertEqual(a.a, 6)

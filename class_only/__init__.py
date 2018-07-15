@@ -5,3 +5,6 @@
 __author__ = """Tom Rutherford"""
 __email__ = "foreverwintr@gmail.com"
 __version__ = "0.1.0"
+
+from class_only.api import class_only
+from class_only.api import constant
