@@ -4,7 +4,7 @@ python:
 env:
   - TOXENV=py35
   - TOXENV=py36
-  - TOXENV=py37
+#  - TOXENV=py37
 install:
   - pip install -U tox codecov
 
@@ -20,4 +20,4 @@ addons: #Added to get python 3.5
       - deadsnakes
     packages:
       - python3.5
-      - python3.7
+#      - python3.7
