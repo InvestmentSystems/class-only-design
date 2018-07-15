@@ -6,7 +6,7 @@
 
 import unittest
 
-from class_only import api
+from class_only import core
 
 
 class TestClassOnly(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestClassOnly(unittest.TestCase):
     def test_class_only(self):
         """Test something."""
 
-        @api.class_only
+        @core.class_only
         class ValidTest:
             CONSTANT = 5
 
@@ -45,21 +45,21 @@ class TestClassOnly(unittest.TestCase):
         # Class only classes can't specify __new__ or __init__
         with self.assertRaises(TypeError):
 
-            @api.class_only
+            @core.class_only
             class Invalid:
                 def __new__(*a, **k):
                     pass
 
         with self.assertRaises(TypeError):
 
-            @api.class_only
+            @core.class_only
             class Invalid:
                 def __init__(*a, **k):
                     pass
 
     def test_wraps(self):
         # The class is wrapped correctly, such that attributes are preserved
-        @api.class_only
+        @core.class_only
         class Test:
             pass
 
@@ -69,7 +69,7 @@ class TestClassOnly(unittest.TestCase):
         bad_state = 0
 
         class A:
-            @api.constant
+            @core.constant
             def a(cls):
                 nonlocal bad_state
                 bad_state += 1
