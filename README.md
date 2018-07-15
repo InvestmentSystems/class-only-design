@@ -3,7 +3,7 @@
 
 ## Tools for class only design. 
 
-A 'Class Only' design is an attempt to merge some aspects of Object Oriented Programming with a Functional programming paradigm. Specifically, it:
+A 'Class Only' design is an attempt to merge some aspects of Object Oriented and Functional programming. Specifically, it:
 
 * allows you to group like functions and attributes in a common namespace,  
 * lets you use inheritance to override certain functions, e.g., to implement the [template pattern](https://en.wikipedia.org/wiki/Template_method_pattern),
