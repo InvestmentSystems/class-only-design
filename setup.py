@@ -1,5 +1,5 @@
 """
-class-only-design is a collection of tools for class only design.
+A collection of tools for class only design.
 
 For more information, please visit the `project on github <https://github.com/ForeverWintr/class-only-design>`_.
 """
