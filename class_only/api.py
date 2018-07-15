@@ -6,7 +6,12 @@ Functions intended to be used externally live here.
 
 import functools
 
-from class_only import util
+
+class OnlyMeta(type):
+    def __setattr__(cls, name, arg):
+        if cls._finished_decoration:
+            raise TypeError("Class Only classes are immutable")
+        return super().__setattr__(name, arg)
 
 
 def class_only(cls):
@@ -16,7 +21,7 @@ def class_only(cls):
     # set updated to an empty iterable. By default it attempts to update __dict__, which isn't
     # valid on a class
     @functools.wraps(cls, updated=())
-    class Only(cls, metaclass=util.OnlyMeta):
+    class Only(cls, metaclass=OnlyMeta):
         _finished_decoration = False
 
         def __new__(*args, **kwargs):

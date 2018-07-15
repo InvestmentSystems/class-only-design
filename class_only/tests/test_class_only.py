@@ -41,6 +41,21 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(ValidTest.static(1), 1)
         self.assertEqual(ValidTest.regular(3), 3)
 
+    def test_load_errors(self):
+        # Class only classes can't specify __new__ or __init__
+        with self.assertRaises(TypeError):
+            @api.class_only
+            class Invalid:
+                def __new__(*a, **k):
+                    pass
+
+        with self.assertRaises(TypeError):
+            @api.class_only
+            class Invalid:
+                def __init__(*a, **k):
+                    pass
+
+
     def test_wraps(self):
         # The class is wrapped correctly, such that attributes are preserved
         @api.class_only
