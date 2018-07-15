@@ -8,6 +8,15 @@ import functools
 
 
 class OnlyMeta(type):
+    def __new__(cls, name, bases, classdict):
+        #Disallow bases that have __new__ or __init__ defined
+        for b in bases:
+            if b.__init__ is not object.__init__:
+                raise TypeError('Class Only classes cannot define __init__', b)
+            if b.__new__ is not object.__new__:
+                raise TypeError('Class Only classes cannot define __new__', b)
+        return super().__new__(cls, name, bases, classdict)
+
     def __setattr__(cls, name, arg):
         if cls._finished_decoration:
             raise TypeError("Class Only classes are immutable")
