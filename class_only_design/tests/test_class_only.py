@@ -6,7 +6,7 @@
 
 import unittest
 
-from class_only import core
+from class_only_design import core
 
 
 class TestClassOnly(unittest.TestCase):

@@ -4,7 +4,7 @@
 # Wing IDE project file                                          #
 ##################################################################
 [project attributes]
-proj.directory-list = [{'dirloc': loc('class_only'),
+proj.directory-list = [{'dirloc': loc('class_only_design'),
                         'excludes': (),
                         'filter': u'*',
                         'include_hidden': False,

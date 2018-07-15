@@ -12,7 +12,7 @@ import shutil
 from setuptools import setup, find_packages, Command
 
 
-import class_only
+import class_only_design
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -54,13 +54,13 @@ class UploadCommand(Command):
 
 
 setup(
-    name=class_only.__name__,
-    version=class_only.__version__,
+    name=class_only_design.__name__,
+    version=class_only_design.__version__,
     description="Metafunctions is a function composition and data pipelining library",
     long_description=__doc__,
     url="https://github.com/ForeverWintr/metafunctions",
-    author=class_only.__author__,
-    author_email=class_only.__email__,
+    author=class_only_design.__author__,
+    author_email=class_only_design.__email__,
     license="MIT",
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
