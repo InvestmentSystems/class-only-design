@@ -6,8 +6,11 @@
 A 'Class Only' design is an attempt to merge some aspects of Object Oriented Programming with a Functional programming paradigm. Specifically, it:
 
 * allows you to group like functions and attributes in a common namespace,  
-* lets you use inheritance to override certain functions, e.g., to implement the [template pattern](https://en.wikipedia.org/wiki/Template_method_pattern)
+* lets you use inheritance to override certain functions, e.g., to implement the [template pattern](https://en.wikipedia.org/wiki/Template_method_pattern),
 * embraces the functional concept of immutability over changing state.
+
+A *class only* class is, in other words, an approach for creating an immutable singleton object.
+________
 
 The `class_only` decorator enforces class only design:
 
@@ -58,4 +61,37 @@ Traceback (most recent call last):
     ...
 TypeError: ('Class Only classes cannot define __init__', <class '__main__.AwesomeClass'>)
 ```
+_________
 
+Conceptually, a *class_only* class can have only one state. However, creating that initial state may be expensive, and you may not want to incur that expense at class creation time. For example, consider the following example:
+
+```python
+@class_only
+class Methodology:
+    config = read_large_config_file()
+    
+    @classmethod
+    def process(cls):
+        for setting in cls.config:
+            # do work
+```
+
+The time cost of calling `read_large_config_file` is incurred when `Methodology` is created, which for most classes means module load time. To address this issue, class_only provides the `constant` decorator. Decorating a method with `@constant` creates a class property that is called at most once. Using `constant`, the above example becomes:
+
+```python
+from class_only import constant
+
+@class_only
+class Methodology:
+
+    @constant
+    def config(cls)
+        return read_large_config_file()
+    
+    @classmethod
+    def process(cls):
+        for setting in cls.config:
+            # do work
+```
+
+In the second example, `read_large_config_file` isn't called until `Methodology.process` is. Note that `@constant` ensures that the `config` method is only ever executed once, even if `Methodology.process` is called multiple times. 
