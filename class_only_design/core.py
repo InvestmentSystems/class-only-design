@@ -11,10 +11,11 @@ class OnlyMeta(type):
     def __new__(cls, name, bases, classdict):
         # Disallow bases that have __new__ or __init__ defined
         for b in bases:
-            if b.__init__ is not object.__init__:
-                raise TypeError("Class Only classes cannot define __init__", b)
-            if b.__new__ is not object.__new__:
-                raise TypeError("Class Only classes cannot define __new__", b)
+            if not isinstance(b, cls):
+                if b.__init__ is not object.__init__:
+                    raise TypeError("Class Only classes cannot define __init__", b)
+                if b.__new__ is not object.__new__:
+                    raise TypeError("Class Only classes cannot define __new__", b)
         return super().__new__(cls, name, bases, classdict)
 
     def __setattr__(cls, name, arg):
@@ -27,7 +28,7 @@ def class_only(cls):
     """
     Class only is a class decorator that disallows instantiation or state change on a class object.
     """
-    # set updated to an empty iterable. By default it attempts to update __dict__, which isn't
+    # set updated to an empty iterable. By default wraps attempts to update __dict__, which isn't
     # valid on a class
     @functools.wraps(cls, updated=())
     class Only(cls, metaclass=OnlyMeta):
