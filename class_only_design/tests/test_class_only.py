@@ -65,7 +65,7 @@ class TestClassOnly(unittest.TestCase):
 
         self.assertEqual(Test.__name__, "Test")
 
-    def test_property(self):
+    def test_constant(self):
         bad_state = 0
 
         class A:
@@ -79,3 +79,35 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(A.a, 6)
         self.assertEqual(A.a, 6)
         self.assertEqual(a.a, 6)
+
+    def test_inheritance_decorated(self):
+        #test case where both classes have the @class_only decorator
+        @core.class_only
+        class X:
+            x = 10
+
+        @core.class_only
+        class X1(X):
+            y = 10
+
+        self.fail()
+
+    def test_inheritance_parent_decorated(self):
+        #test case where only parent class has the @class_only decorator
+        @core.class_only
+        class X:
+            x = 10
+
+        class X1(X):
+            y = 10
+        self.fail()
+
+    def test_inheritance_child_decorated(self):
+        #test case where only child class has the @class_only decorator
+        class X:
+            x = 10
+
+        @core.class_only
+        class X1(X):
+            y = 10
+        self.fail()
