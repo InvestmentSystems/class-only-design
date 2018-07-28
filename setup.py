@@ -1,7 +1,7 @@
 """
 A collection of tools for class only design.
 
-For more information, please visit the `project on github <https://github.com/ForeverWintr/class-only-design>`_.
+For more information, please visit the `project on github <https://github.com/InvestmentSystems/class_only_design>`_.
 """
 
 import os
@@ -58,7 +58,7 @@ setup(
     version=class_only_design.__version__,
     description="Tools for class only design.",
     long_description=__doc__,
-    url="https://github.com/ForeverWintr/class-only-design",
+    url="https://github.com/InvestmentSystems/class_only_design",
     author=class_only_design.__author__,
     author_email=class_only_design.__email__,
     license="MIT",
