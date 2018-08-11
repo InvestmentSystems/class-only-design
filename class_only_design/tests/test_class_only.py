@@ -81,7 +81,7 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(a.a, 6)
 
     def test_inheritance_decorated(self):
-        #test case where both classes have the @class_only decorator
+        # test case where both classes have the @class_only decorator
         @core.class_only
         class X:
             x = 10
@@ -96,7 +96,7 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(X1.y, 10)
 
     def test_inheritance_parent_decorated(self):
-        #test case where only parent class has the @class_only decorator
+        # test case where only parent class has the @class_only decorator
         @core.class_only
         class X:
             x = 10
@@ -117,7 +117,7 @@ class TestClassOnly(unittest.TestCase):
             X1.x = 5
 
     def test_inheritance_child_decorated(self):
-        #test case where only child class has the @class_only decorator
+        # test case where only child class has the @class_only decorator
         class X:
             x = 10
             y = 10
@@ -143,7 +143,6 @@ class TestClassOnly(unittest.TestCase):
         with self.assertRaises(TypeError):
             X1.y = 5
 
-
     def test_multiple_inheritance(self):
         # if a class only class is used as a mixin, what should happen?
         @core.class_only
@@ -161,9 +160,9 @@ class TestClassOnly(unittest.TestCase):
             x = 2
             y = 2
 
-        #I think class_only should propagate
+        # I think class_only should propagate
         for cls in X3, X4:
-            for attr in 'xyz':
+            for attr in "xyz":
                 with self.assertRaises(TypeError):
                     setattr(cls, attr, 1234)
 
@@ -182,3 +181,5 @@ class TestClassOnly(unittest.TestCase):
             X.x = 5
         X.__base__.x = 3
         self.assertEqual(X.x, 3)
+
+
