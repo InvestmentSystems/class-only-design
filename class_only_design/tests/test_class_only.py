@@ -181,5 +181,3 @@ class TestClassOnly(unittest.TestCase):
             X.x = 5
         X.__base__.x = 3
         self.assertEqual(X.x, 3)
-
-

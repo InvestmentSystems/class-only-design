@@ -56,6 +56,3 @@ class constant:
         if not self._value:
             self._value = self.method(cls)
         return self._value
-
-
-

@@ -4,11 +4,12 @@ from class_only_design import core
 from class_only_design import namespace
 
 
-class TestClassOnly(unittest.TestCase):
+class TestNamespace(unittest.TestCase):
     def test_namespace(self):
         # a base class for classes intended to hold constants
 
-        class Valid(namespace.Namespace):
+        @namespace.namespace
+        class Valid:
             a = 1
             b = 2
             c = 3
@@ -20,8 +21,27 @@ class TestClassOnly(unittest.TestCase):
         # namespace classes are iterable
         self.assertListEqual(list(Valid), [1, 2, 3])
 
+    def test_constant(self):
+        bad_state = 0
+
+        @namespace.namespace
+        class A:
+            @core.constant
+            def a(cls):
+                nonlocal bad_state
+                bad_state += 1
+                return 5 + bad_state
+
+        self.assertEqual(A.a, 6)
+        self.assertEqual(A.a, 6)
+
+    def test_nameof(self):
+        @namespace.namespace
+        class Valid:
+            a_long_name = 1
+
         # bonus: Namespace classes can tell you their attr names as strings
-        self.assertEqual(Valid.nameof.a, "a")
+        self.assertEqual(Valid.nameof.a, "a_long_name")
 
     def test_attr_only_namespace(self):
         # TODO: a strict namespace class can't contain methods (ie, no callables)
@@ -33,12 +53,12 @@ class TestClassOnly(unittest.TestCase):
 
         with self.assertRaises(TypeError):
 
-            @core.namespace
+            @namespace.namespace
             class Invalid:
                 sneaky = lambda: 1
 
     def test_namespace_inheritance(self):
-        @core.namespace
+        @namespace.namespace
         class Valid:
             a = 1
             b = 2
@@ -47,12 +67,11 @@ class TestClassOnly(unittest.TestCase):
         self.fail("basically, repeat the class_only inheritance tests")
 
     def test_namespace_iteration(self):
-
         class Regular:
             a = 1
             b = 2
 
-        @core.namespace
+        @namespace.namespace
         class N(regular):
             c = 5
             d = 3
@@ -61,10 +80,14 @@ class TestClassOnly(unittest.TestCase):
         # Namespace classes only iterate over namespace classes
         self.assertListEqual(list(N), [5, 3, 2])
 
-        @core.namespace
+        @namespace.namespace
         class N2(N):
             b = 4
             g = 5
 
         # Iteration is in definition order, including overridden definitions
         self.assertListEqual(list(N2), [5, 3, 4, 5])
+
+    def test_sunder_attributes(self):
+        # a concept borrowed from Enum, _sunder_ names begin and end with an underscore
+        self.fail("todo")
