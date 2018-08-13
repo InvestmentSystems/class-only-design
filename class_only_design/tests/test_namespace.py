@@ -104,10 +104,6 @@ class TestNamespace(unittest.TestCase):
         # Iteration is in reverse definition order, including overridden definitions
         self.assertListEqual(list(N2), [4, 5, 5, 3])
 
-    def test_sunder_attributes(self):
-        # a concept borrowed from Enum, _sunder_ names begin and end with an underscore
-        self.fail("todo")
-
     def test_reserved_names(self):
         # no namespace class may use any name in constants.reserved names
         for name in constants.RESERVED_NAMES:
@@ -120,3 +116,108 @@ class TestNamespace(unittest.TestCase):
             # I'm using ValueError because that's what namedtuple uses if an invalid name is used
             with self.assertRaises(ValueError) as e:
                 namespace.namespace(A)
+
+
+class InheritanceTests(unittest.TestCase):
+    '''These are the same tests as for class only inheritance'''
+    def test_inheritance_decorated(self):
+        # test case where both classes have the @namespace decorator
+        @namespace.namespace
+        class X:
+            x = 10
+
+        @namespace.namespace
+        class X1(X):
+            y = 10
+            x = 11
+
+        self.assertEqual(X.x, 10)
+        self.assertEqual(X1.x, 11)
+        self.assertEqual(X1.y, 10)
+
+    def test_inheritance_parent_decorated(self):
+        # test case where only parent class has the @namespace decorator
+        @namespace.namespace
+        class X:
+            x = 10
+
+        class X1(X):
+            y = 10
+
+        # once class only, always class only
+        self.assertEqual(X.x, 10)
+        self.assertEqual(X1.y, 10)
+        self.assertEqual(X1.x, 10)
+
+        with self.assertRaises(TypeError):
+            X1.y = 5
+        with self.assertRaises(TypeError):
+            X1.a = 5
+        with self.assertRaises(TypeError):
+            X1.x = 5
+
+    def test_inheritance_child_decorated(self):
+        # test case where only child class has the @namespace decorator
+        class X:
+            x = 10
+            y = 10
+
+        @namespace.namespace
+        class X1(X):
+            y = 10
+
+        self.assertEqual(X.x, 10)
+        self.assertEqual(X1.x, 10)
+
+        # in this case, modifying the parent is allowed, of course
+        X.x = 5
+        self.assertEqual(X.x, 5)
+        # But it also changes inherited attributes on the child...
+        self.assertEqual(X1.x, 5)
+
+        # Explicitly overridden attributes are not changed
+        X.y = 5
+        self.assertEqual(X.y, 5)
+        self.assertEqual(X1.y, 10)
+
+        with self.assertRaises(TypeError):
+            X1.y = 5
+
+    def test_multiple_inheritance(self):
+        # if a namespace class is used as a mixin, what should happen?
+        @namespace.namespace
+        class X:
+            x = 10
+
+        class X1:
+            y = 10
+
+        class X3(X, X1):
+            x = 1
+            y = 1
+
+        class X4(X1, X):
+            x = 2
+            y = 2
+
+        # I think class_only should propagate
+        for cls in X3, X4:
+            for attr in "xyz":
+                with self.assertRaises(TypeError):
+                    setattr(cls, attr, 1234)
+
+        self.assertEqual(X3.x, 1)
+        self.assertEqual(X4.y, 2)
+
+    def test_base(self):
+        # You can modify the undelying class if you want, using __base__. This isn't by design, but
+        # this test exists to illustrate it.
+
+        @namespace.namespace
+        class X:
+            x = 10
+
+        with self.assertRaises(TypeError):
+            X.x = 5
+        X.__base__.x = 3
+        self.assertEqual(X.x, 3)
