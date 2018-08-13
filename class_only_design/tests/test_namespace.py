@@ -2,6 +2,7 @@ import unittest
 
 from class_only_design import core
 from class_only_design import namespace
+from class_only_design import constants
 
 
 class TestNamespace(unittest.TestCase):
@@ -108,5 +109,14 @@ class TestNamespace(unittest.TestCase):
         self.fail("todo")
 
     def test_reserved_names(self):
-        #no namespace class may use any name in constants.reserved names
-        self.fail('todo')
+        # no namespace class may use any name in constants.reserved names
+        for name in constants.RESERVED_NAMES:
+            # create a class that specifies name and make sure namespace raises an error
+            class A:
+                pass
+
+            setattr(A, name, 5)
+
+            # I'm using ValueError because that's what namedtuple uses if an invalid name is used
+            with self.assertRaises(ValueError):
+                namespace.namespace(A)

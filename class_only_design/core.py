@@ -19,7 +19,7 @@ class OnlyMeta(type):
         return super().__new__(cls, name, bases, classdict)
 
     def __setattr__(cls, name, arg):
-        if not hasattr(cls, '_initializing_'):
+        if not getattr(cls, "_initializing_", False):
             raise TypeError("Class Only classes are immutable")
         return super().__setattr__(name, arg)
 

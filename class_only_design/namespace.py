@@ -1,6 +1,7 @@
 import functools
 
 from class_only_design import core
+from class_only_design import constants
 
 
 def _is_dunder(name):
@@ -23,11 +24,15 @@ def _is_sunder(name):
     )
 
 
+def _is_reserved(name):
+    return name in constants.RESERVED_NAMES
+
+
 def _is_internal(name):
     """Return true if the given name is internal to the class_only_design library. Currently we
     check for __dunder__ and _sunder_ names
     """
-    return _is_dunder(name) or _is_sunder(name)
+    return _is_dunder(name) or _is_sunder(name) or _is_reserved(name)
 
 
 class KeyGetter:
@@ -44,6 +49,17 @@ class KeyGetter:
 
 
 class MetaNamespace(core.OnlyMeta):
+    def __new__(cls, name, bases, classdict):
+        # disallow reserved names
+        for b in bases:
+            if not isinstance(b, cls):
+                bad_names = vars(b).keys() & constants.RESERVED_NAMES
+                if bad_names:
+                    raise ValueError(
+                        "Cannot create namespace class with reserved names", bad_names
+                    )
+        return super().__new__(cls, name, bases, classdict)
+
     def __iter__(cls):
         for c in cls.__mro__:
             if issubclass(type(c), type(cls)):
