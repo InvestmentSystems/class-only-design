@@ -56,18 +56,23 @@ class MetaNamespace(core.OnlyMeta):
                 bad_names = vars(b).keys() & constants.RESERVED_NAMES
                 if bad_names:
                     raise ValueError(
-                        "Cannot create namespace class with reserved names", bad_names
+                        "Cannot create namespace class with reserved names",
+                        sorted(bad_names),
                     )
         return super().__new__(cls, name, bases, classdict)
 
     def __iter__(cls):
+        # Walk up the mro, looking for namespace classes. Keep track of attrs we've already seen
+        # and don't re-yield their values
+        seen_attrs = set()
         for c in cls.__mro__:
             if issubclass(type(c), type(cls)):
                 # c is the class created by the namespace decorator, so look one level up to find
                 # the decorated class. This will mean that classes that inherit from namespaces
                 # aren't iterable unless they're @namespace decorated
                 for k, v in vars(c.__mro__[1]).items():
-                    if not _is_internal(k):
+                    if not _is_internal(k) and k not in seen_attrs:
+                        seen_attrs.add(k)
                         yield v
 
 

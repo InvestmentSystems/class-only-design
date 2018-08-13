@@ -101,8 +101,8 @@ class TestNamespace(unittest.TestCase):
             b = 4
             g = 5
 
-        # Iteration is in definition order, including overridden definitions
-        self.assertListEqual(list(N2), [5, 3, 4, 5])
+        # Iteration is in reverse definition order, including overridden definitions
+        self.assertListEqual(list(N2), [4, 5, 5, 3])
 
     def test_sunder_attributes(self):
         # a concept borrowed from Enum, _sunder_ names begin and end with an underscore
@@ -118,5 +118,5 @@ class TestNamespace(unittest.TestCase):
             setattr(A, name, 5)
 
             # I'm using ValueError because that's what namedtuple uses if an invalid name is used
-            with self.assertRaises(ValueError):
+            with self.assertRaises(ValueError) as e:
                 namespace.namespace(A)
