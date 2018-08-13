@@ -21,6 +21,19 @@ class TestNamespace(unittest.TestCase):
         # namespace classes are iterable
         self.assertListEqual(list(Valid), [1, 2, 3])
 
+        # An inheriting class isn't iterable, but the namespace above it is
+        class Child(Valid):
+            d = 0
+
+        self.assertListEqual(list(Child), [1, 2, 3])
+
+        @namespace.namespace
+        class Child(Valid):
+            d = 0
+
+        self.assertListEqual(list(Child), [0, 1, 2, 3])
+
+
     def test_constant(self):
         bad_state = 0
 
@@ -40,8 +53,11 @@ class TestNamespace(unittest.TestCase):
         class Valid:
             a_long_name = 1
 
+        with self.assertRaises(AttributeError) as e:
+            Valid.nameof.b
+
         # bonus: Namespace classes can tell you their attr names as strings
-        self.assertEqual(Valid.nameof.a, "a_long_name")
+        self.assertEqual(Valid.nameof.a_long_name, "a_long_name")
 
     def test_attr_only_namespace(self):
         # TODO: a strict namespace class can't contain methods (ie, no callables)
@@ -72,13 +88,13 @@ class TestNamespace(unittest.TestCase):
             b = 2
 
         @namespace.namespace
-        class N(regular):
+        class N(Regular):
             c = 5
             d = 3
             b = 3
 
         # Namespace classes only iterate over namespace classes
-        self.assertListEqual(list(N), [5, 3, 2])
+        self.assertListEqual(list(N), [5, 3, 3])
 
         @namespace.namespace
         class N2(N):

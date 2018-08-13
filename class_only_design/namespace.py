@@ -30,11 +30,29 @@ def _is_internal(name):
     return _is_dunder(name) or _is_sunder(name)
 
 
+class KeyGetter:
+    def __init__(self, cls):
+        '''
+        KeyGetter takes a class, and provides a __getattr__ that returns keys instead of values
+        '''
+        self._cls_ = cls
+
+    def __getattr__(self, attr):
+        #Call getattr, so that an exception is raised as normal if the attr doesn't exist
+        getattr(self._cls_, attr)
+        return attr
+
+
 class MetaNamespace(core.OnlyMeta):
     def __iter__(cls):
-        for k, v in vars(cls.__mro__[1]).items():
-            if not _is_internal(k):
-                yield v
+        for c in cls.__mro__:
+            if issubclass(type(c), type(cls)):
+                # c is the class created by the namespace decorator, so look one level up to find
+                # the decorated class. This will mean that classes that inherit from namespaces
+                # aren't iterable unless they're @namespace decorated
+                for k, v in vars(c.__mro__[1]).items():
+                    if not _is_internal(k):
+                        yield v
 
 
 def namespace(cls):
@@ -43,12 +61,14 @@ def namespace(cls):
     """
     # set updated to an empty iterable. By default wraps attempts to update __dict__, which isn't
     # valid on a class
-    @functools.wraps(cls, updated=())
+    #@functools.wraps(cls, updated=())
     class NS(cls, metaclass=MetaNamespace):
-        _finished_initialization = False
+        _finished_initialization_ = False
 
         def __new__(*args, **kwargs):
             raise TypeError("Class Only classes cannot be instantiated")
 
-    NS._finished_initialization = True
+        nameof = KeyGetter(cls)
+
+    NS._finished_initialization_ = True
     return NS
