@@ -33,7 +33,6 @@ class TestNamespace(unittest.TestCase):
 
         self.assertListEqual(list(Child), [0, 1, 2, 3])
 
-
     def test_constant(self):
         bad_state = 0
 

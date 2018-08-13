@@ -19,7 +19,7 @@ class OnlyMeta(type):
         return super().__new__(cls, name, bases, classdict)
 
     def __setattr__(cls, name, arg):
-        if cls._finished_initialization_:
+        if not hasattr(cls, '_initializing_'):
             raise TypeError("Class Only classes are immutable")
         return super().__setattr__(name, arg)
 
@@ -32,12 +32,12 @@ def class_only(cls):
     # valid on a class
     @functools.wraps(cls, updated=())
     class Only(cls, metaclass=OnlyMeta):
-        _finished_initialization_ = False
+        _initializing_ = True
 
         def __new__(*args, **kwargs):
             raise TypeError("Class Only classes cannot be instantiated")
 
-    Only._finished_initialization_ = True
+    del Only._initializing_
     return Only
 
 
