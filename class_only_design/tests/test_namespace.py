@@ -106,3 +106,7 @@ class TestNamespace(unittest.TestCase):
     def test_sunder_attributes(self):
         # a concept borrowed from Enum, _sunder_ names begin and end with an underscore
         self.fail("todo")
+
+    def test_reserved_names(self):
+        #no namespace class may use any name in constants.reserved names
+        self.fail('todo')
