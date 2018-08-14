@@ -20,10 +20,6 @@ class TestNamespace(unittest.TestCase):
             Valid.a = 5
 
         # namespace classes are iterable
-        import sys
-
-        print(sys.version)
-        print(Valid.__base__.__dict__)
         self.assertListEqual(list(Valid), [1, 2, 3])
 
         # An inheriting class isn't iterable, but the namespace above it is
