@@ -21,6 +21,7 @@ class TestNamespace(unittest.TestCase):
 
         # namespace classes are iterable
         import sys
+
         print(sys.version)
         print(Valid.__base__.__dict__)
         self.assertListEqual(list(Valid), [1, 2, 3])
@@ -62,7 +63,7 @@ class TestNamespace(unittest.TestCase):
         # bonus: Namespace classes can tell you their attr names as strings
         self.assertEqual(Valid.nameof.a_long_name, "a_long_name")
 
-    @unittest.skip('Not sure if this is useful')
+    @unittest.skip("Not sure if this is useful")
     def test_attr_only_namespace(self):
         # TODO: a strict namespace class can't contain methods (ie, no callables)
         with self.assertRaises(TypeError):
@@ -114,7 +115,8 @@ class TestNamespace(unittest.TestCase):
 
 
 class InheritanceTests(unittest.TestCase):
-    '''These are the same tests as for class only inheritance'''
+    """These are the same tests as for class only inheritance"""
+
     def test_inheritance_decorated(self):
         # test case where both classes have the @namespace decorator
         @namespace.namespace
