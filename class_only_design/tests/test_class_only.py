@@ -6,7 +6,8 @@
 
 import unittest
 
-from class_only_design import core
+from class_only_design import class_only
+from class_only_design import constant
 
 
 class TestClassOnly(unittest.TestCase):
@@ -15,7 +16,7 @@ class TestClassOnly(unittest.TestCase):
     def test_class_only(self):
         """Test something."""
 
-        @core.class_only
+        @class_only
         class ValidTest:
             CONSTANT = 5
 
@@ -45,21 +46,21 @@ class TestClassOnly(unittest.TestCase):
         # Class only classes can't specify __new__ or __init__
         with self.assertRaises(TypeError):
 
-            @core.class_only
+            @class_only
             class Invalid:
                 def __new__(*a, **k):
                     pass
 
         with self.assertRaises(TypeError):
 
-            @core.class_only
+            @class_only
             class Invalid:
                 def __init__(*a, **k):
                     pass
 
     def test_wraps(self):
         # The class is wrapped correctly, such that attributes are preserved
-        @core.class_only
+        @class_only
         class Test:
             pass
 
@@ -69,7 +70,7 @@ class TestClassOnly(unittest.TestCase):
         bad_state = 0
 
         class A:
-            @core.constant
+            @constant
             def a(cls):
                 nonlocal bad_state
                 bad_state += 1
@@ -82,11 +83,11 @@ class TestClassOnly(unittest.TestCase):
 
     def test_inheritance_decorated(self):
         # test case where both classes have the @class_only decorator
-        @core.class_only
+        @class_only
         class X:
             x = 10
 
-        @core.class_only
+        @class_only
         class X1(X):
             y = 10
             x = 11
@@ -97,7 +98,7 @@ class TestClassOnly(unittest.TestCase):
 
     def test_inheritance_parent_decorated(self):
         # test case where only parent class has the @class_only decorator
-        @core.class_only
+        @class_only
         class X:
             x = 10
 
@@ -122,7 +123,7 @@ class TestClassOnly(unittest.TestCase):
             x = 10
             y = 10
 
-        @core.class_only
+        @class_only
         class X1(X):
             y = 10
 
@@ -145,7 +146,7 @@ class TestClassOnly(unittest.TestCase):
 
     def test_multiple_inheritance(self):
         # if a class only class is used as a mixin, what should happen?
-        @core.class_only
+        @class_only
         class X:
             x = 10
 
@@ -173,7 +174,7 @@ class TestClassOnly(unittest.TestCase):
         # You can modify the undelying class if you want, using __base__. This isn't by design, but
         # this test exists to illustrate it.
 
-        @core.class_only
+        @class_only
         class X:
             x = 10
 

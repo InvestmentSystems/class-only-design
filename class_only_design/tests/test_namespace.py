@@ -1,8 +1,8 @@
 import unittest
 import sys
 
-from class_only_design import core
 from class_only_design import namespace
+from class_only_design import constant
 from class_only_design import constants
 
 iterable_compare = list
@@ -15,7 +15,7 @@ class TestNamespace(unittest.TestCase):
     def test_namespace(self):
         # a base class for classes intended to hold constants
 
-        @namespace.namespace
+        @namespace
         class Valid:
             a = 1
             b = 2
@@ -40,7 +40,7 @@ class TestNamespace(unittest.TestCase):
 
         self.assertSequenceEqual(iterable_compare(Child), iterable_compare([1, 2, 3]))
 
-        @namespace.namespace
+        @namespace
         class Child(Valid):
             d = 0
 
@@ -49,9 +49,9 @@ class TestNamespace(unittest.TestCase):
     def test_constant(self):
         bad_state = 0
 
-        @namespace.namespace
+        @namespace
         class A:
-            @core.constant
+            @constant
             def a(cls):
                 nonlocal bad_state
                 bad_state += 1
@@ -61,14 +61,14 @@ class TestNamespace(unittest.TestCase):
         self.assertEqual(A.a, 6)
 
     def test_nameof(self):
-        @namespace.namespace
+        @namespace
         class Valid:
             a_long_name = 1
 
         with self.assertRaises(AttributeError) as e:
             Valid.nameof.b
 
-        # bonus: Namespace classes can tell you their attr names as strings
+        # Namespace classes can tell you their attr names as strings
         self.assertEqual(Valid.nameof.a_long_name, "a_long_name")
 
     @unittest.skip("Not sure if this is useful")
@@ -82,7 +82,7 @@ class TestNamespace(unittest.TestCase):
 
         with self.assertRaises(TypeError):
 
-            @namespace.namespace
+            @namespace
             class Invalid:
                 sneaky = lambda: 1
 
@@ -91,7 +91,7 @@ class TestNamespace(unittest.TestCase):
             a = 1
             b = 2
 
-        @namespace.namespace
+        @namespace
         class N(Regular):
             c = 5
             d = 3
@@ -100,7 +100,7 @@ class TestNamespace(unittest.TestCase):
         # Namespace classes only iterate over namespace classes
         self.assertSequenceEqual(iterable_compare(N), iterable_compare([5, 3, 3]))
 
-        @namespace.namespace
+        @namespace
         class N2(N):
             b = 4
             g = 5
@@ -119,7 +119,7 @@ class TestNamespace(unittest.TestCase):
 
             # I'm using ValueError because that's what namedtuple uses if an invalid name is used
             with self.assertRaises(ValueError) as e:
-                namespace.namespace(A)
+                namespace(A)
 
 
 class InheritanceTests(unittest.TestCase):
@@ -127,11 +127,11 @@ class InheritanceTests(unittest.TestCase):
 
     def test_inheritance_decorated(self):
         # test case where both classes have the @namespace decorator
-        @namespace.namespace
+        @namespace
         class X:
             x = 10
 
-        @namespace.namespace
+        @namespace
         class X1(X):
             y = 10
             x = 11
@@ -142,7 +142,7 @@ class InheritanceTests(unittest.TestCase):
 
     def test_inheritance_parent_decorated(self):
         # test case where only parent class has the @namespace decorator
-        @namespace.namespace
+        @namespace
         class X:
             x = 10
 
@@ -167,7 +167,7 @@ class InheritanceTests(unittest.TestCase):
             x = 10
             y = 10
 
-        @namespace.namespace
+        @namespace
         class X1(X):
             y = 10
 
@@ -190,7 +190,7 @@ class InheritanceTests(unittest.TestCase):
 
     def test_multiple_inheritance(self):
         # if a namespace class is used as a mixin, what should happen?
-        @namespace.namespace
+        @namespace
         class X:
             x = 10
 
@@ -218,7 +218,7 @@ class InheritanceTests(unittest.TestCase):
         # You can modify the undelying class if you want, using __base__. This isn't by design, but
         # this test exists to illustrate it.
 
-        @namespace.namespace
+        @namespace
         class X:
             x = 10
 

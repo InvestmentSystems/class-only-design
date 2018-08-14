@@ -1,3 +1,6 @@
+from class_only_design import constants
+from class_only_design import util
+
 
 class OnlyMeta(type):
     def __new__(cls, name, bases, classdict):
@@ -16,7 +19,7 @@ class OnlyMeta(type):
         return super().__setattr__(name, arg)
 
 
-class MetaNamespace(core.OnlyMeta):
+class MetaNamespace(OnlyMeta):
     def __new__(cls, name, bases, classdict):
         # disallow reserved names
         for b in bases:
@@ -39,6 +42,6 @@ class MetaNamespace(core.OnlyMeta):
                 # the decorated class. This will mean that classes that inherit from namespaces
                 # aren't iterable unless they're @namespace decorated
                 for k, v in vars(c.__mro__[1]).items():
-                    if not _is_internal(k) and k not in seen_attrs:
+                    if not util._is_internal(k) and k not in seen_attrs:
                         seen_attrs.add(k)
                         yield v

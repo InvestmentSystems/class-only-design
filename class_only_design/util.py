@@ -1,4 +1,4 @@
-from class_only_design import constant
+from class_only_design import constants
 
 
 def _is_dunder(name):

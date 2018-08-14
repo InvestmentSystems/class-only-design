@@ -2,6 +2,7 @@ import functools
 
 from class_only_design.meta import OnlyMeta
 from class_only_design.meta import MetaNamespace
+from class_only_design import util
 
 
 def class_only(cls):
@@ -51,7 +52,7 @@ def namespace(cls):
         def __new__(*args, **kwargs):
             raise TypeError("Class Only classes cannot be instantiated")
 
-        nameof = KeyGetter(cls)
+        nameof = util.KeyGetter(cls)
 
     del NS._initializing_
     return NS
