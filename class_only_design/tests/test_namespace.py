@@ -1,8 +1,14 @@
 import unittest
+import sys
 
 from class_only_design import core
 from class_only_design import namespace
 from class_only_design import constants
+
+iterable_compare = list
+# In python < 3.6, classes aren't ordered
+if sys.version_info < (3, 6, 0):
+    iterable_compare = set
 
 
 class TestNamespace(unittest.TestCase):
@@ -18,21 +24,27 @@ class TestNamespace(unittest.TestCase):
         # namespace classes are immutable
         with self.assertRaises(TypeError):
             Valid.a = 5
+        with self.assertRaises(TypeError):
+            Valid.x = 5
+
+        # namespace classes can't be instantiated
+        with self.assertRaises(TypeError):
+            Valid()
 
         # namespace classes are iterable
-        self.assertListEqual(list(Valid), [1, 2, 3])
+        self.assertSequenceEqual(iterable_compare(Valid), iterable_compare([1, 2, 3]))
 
         # An inheriting class isn't iterable, but the namespace above it is
         class Child(Valid):
             d = 0
 
-        self.assertListEqual(list(Child), [1, 2, 3])
+        self.assertSequenceEqual(iterable_compare(Child), iterable_compare([1, 2, 3]))
 
         @namespace.namespace
         class Child(Valid):
             d = 0
 
-        self.assertListEqual(list(Child), [0, 1, 2, 3])
+        self.assertSequenceEqual(iterable_compare(Child), iterable_compare([0, 1, 2, 3]))
 
     def test_constant(self):
         bad_state = 0
@@ -86,7 +98,7 @@ class TestNamespace(unittest.TestCase):
             b = 3
 
         # Namespace classes only iterate over namespace classes
-        self.assertListEqual(list(N), [5, 3, 3])
+        self.assertSequenceEqual(iterable_compare(N), iterable_compare([5, 3, 3]))
 
         @namespace.namespace
         class N2(N):
@@ -94,7 +106,7 @@ class TestNamespace(unittest.TestCase):
             g = 5
 
         # Iteration is in reverse definition order, including overridden definitions
-        self.assertListEqual(list(N2), [4, 5, 5, 3])
+        self.assertSequenceEqual(iterable_compare(N2), iterable_compare([4, 5, 5, 3]))
 
     def test_reserved_names(self):
         # no namespace class may use any name in constants.reserved names
