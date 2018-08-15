@@ -1,7 +1,10 @@
 from class_only_design import constants
 from class_only_design import util
 
-# This is inserted into decorated classes
+# This is inserted into decorated classes. Note, __new__ is implicitly converted to a staticmethod
+# during class creation. I'm doing so explicitly here so I have a reference I can check later. This
+# seems to prevent the implicit transformation, but I'm not sure if that's an implementation
+# detail.
 @staticmethod
 def __new__(*args, **kwargs):
     raise TypeError("Class Only classes cannot be instantiated")
