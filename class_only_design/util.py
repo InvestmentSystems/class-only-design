@@ -48,4 +48,4 @@ class KeyGetter:
         return attr
 
     def __dir__(self):
-        return dir(self._cls_)
+        return sorted(vars(self._cls_))
