@@ -13,9 +13,9 @@ def __new__(*args, **kwargs):
 class OnlyMeta(type):
     def __new__(cls, name, bases, classdict):
 
-        if '__init__' in classdict:
+        if "__init__" in classdict:
             raise TypeError("Class Only classes cannot define __init__")
-        if classdict.get('__new__') not in (__new__, None):
+        if classdict.get("__new__") not in (__new__, None):
             raise TypeError("Class Only classes cannot define __new__")
 
         # Disallow bases that have __new__ or __init__ defined
@@ -27,7 +27,7 @@ class OnlyMeta(type):
                     raise TypeError("Class Only classes cannot define __new__", b)
 
         # Insert our own __new__
-        classdict['__new__'] = __new__
+        classdict["__new__"] = __new__
         return super().__new__(cls, name, bases, classdict)
 
     def __setattr__(cls, name, arg):
@@ -54,11 +54,11 @@ class MetaNamespace(OnlyMeta):
         # and don't re-yield their values
         seen_attrs = set()
         for c in cls.__mro__:
-            if issubclass(type(c), type(cls)):
+            if isinstance(c, MetaNamespace):
                 # c is the class created by the namespace decorator, so look one level up to find
                 # the decorated class. This will mean that classes that inherit from namespaces
                 # aren't iterable unless they're @namespace decorated
-                for k, v in vars(c.__mro__[1]).items():
+                for k, v in vars(c).items():
                     if not util._is_internal(k) and k not in seen_attrs:
                         seen_attrs.add(k)
                         yield v

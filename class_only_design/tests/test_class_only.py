@@ -193,4 +193,3 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(OnlyA.__mro__, (OnlyA, A, object))
         self.assertEqual(OnlyB.__mro__, (OnlyB, B, object))
         self.assertEqual(OnlyAB.__mro__, (OnlyAB, A, B, object))
-

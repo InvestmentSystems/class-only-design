@@ -39,7 +39,6 @@ def namespace(cls):
 
     classdict = {k: v for k, v in cls.__dict__.items()}
     classdict["_initializing_"] = True
-    classdict["__new__"] = util.__new__
     new = MetaNamespace(cls.__name__, cls.__bases__, classdict)
     new.nameof = util.KeyGetter(new)
     del new._initializing_
