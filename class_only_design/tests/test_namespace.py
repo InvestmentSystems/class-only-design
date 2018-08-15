@@ -34,11 +34,13 @@ class TestNamespace(unittest.TestCase):
         # namespace classes are iterable
         self.assertSequenceEqual(iterable_compare(Valid), iterable_compare([1, 2, 3]))
 
-        # An inheriting class isn't iterable, but the namespace above it is
+        # Inheriting from an NS class keeps the iteration.
         class Child(Valid):
             d = 0
 
-        self.assertSequenceEqual(iterable_compare(Child), iterable_compare([1, 2, 3]))
+        self.assertSequenceEqual(
+            iterable_compare(Child), iterable_compare([0, 1, 2, 3])
+        )
 
         @namespace
         class Child(Valid):
@@ -47,6 +49,7 @@ class TestNamespace(unittest.TestCase):
         self.assertSequenceEqual(
             iterable_compare(Child), iterable_compare([0, 1, 2, 3])
         )
+        self.fail("simplify this")
 
     def test_constant(self):
         bad_state = 0
@@ -120,8 +123,15 @@ class TestNamespace(unittest.TestCase):
             setattr(A, name, 5)
 
             # I'm using ValueError because that's what namedtuple uses if an invalid name is used
-            with self.assertRaises(ValueError) as e:
+            with self.assertRaises(ValueError, msg=name) as e:
                 namespace(A)
+
+            # also check inheritance
+            with self.assertRaises(ValueError, msg=name) as f:
+
+                @namespace
+                class B(A):
+                    pass
 
 
 class InheritanceTests(unittest.TestCase):
@@ -215,16 +225,3 @@ class InheritanceTests(unittest.TestCase):
 
         self.assertEqual(X3.x, 1)
         self.assertEqual(X4.y, 2)
-
-    def test_base(self):
-        # You can modify the undelying class if you want, using __base__. This isn't by design, but
-        # this test exists to illustrate it.
-
-        @namespace
-        class X:
-            x = 10
-
-        with self.assertRaises(TypeError):
-            X.x = 5
-        X.__base__.x = 3
-        self.assertEqual(X.x, 3)

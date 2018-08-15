@@ -39,14 +39,15 @@ class OnlyMeta(type):
 class MetaNamespace(OnlyMeta):
     def __new__(cls, name, bases, classdict):
         # disallow reserved names
+        bad_names = classdict.keys() & constants.RESERVED_NAMES
+
         for b in bases:
             if not isinstance(b, cls):
-                bad_names = vars(b).keys() & constants.RESERVED_NAMES
-                if bad_names:
-                    raise ValueError(
-                        "Cannot create namespace class with reserved names",
-                        sorted(bad_names),
-                    )
+                bad_names |= vars(b).keys() & constants.RESERVED_NAMES
+        if bad_names:
+            raise ValueError(
+                "Cannot create namespace class with reserved names", sorted(bad_names)
+            )
         return super().__new__(cls, name, bases, classdict)
 
     def __iter__(cls):
