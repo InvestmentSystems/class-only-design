@@ -14,8 +14,8 @@ class TestUtil(unittest.TestCase):
 
         self.assertEqual(A.nameof.a, "a")
         self.assertEqual(A.nameof.long_name, "long_name")
-        self.assertIn('a', dir(A.nameof))
-        self.assertIn('long_name', dir(A.nameof))
+        self.assertIn("a", dir(A.nameof))
+        self.assertIn("long_name", dir(A.nameof))
 
         with self.assertRaises(AttributeError) as e:
             A.nameof.doesntexist
