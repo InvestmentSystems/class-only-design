@@ -9,17 +9,10 @@ def class_only(cls):
     """
     Class only is a class decorator that disallows instantiation or state change on a class object.
     """
-    # set updated to an empty iterable. By default wraps attempts to update __dict__, which isn't
-    # valid on a class
-    @functools.wraps(cls, updated=())
-    class Only(cls, metaclass=OnlyMeta):
-        _initializing_ = True
+    classdict = {k: v for k, v in cls.__dict__.items()}
+    new = OnlyMeta(cls.__name__, cls.__bases__, classdict)
 
-        def __new__(*args, **kwargs):
-            raise TypeError("Class Only classes cannot be instantiated")
-
-    del Only._initializing_
-    return Only
+    return new
 
 
 class constant:
@@ -44,12 +37,9 @@ def namespace(cls):
     Class only is a class decorator that disallows instantiation or state change on a class object.
     """
 
-    def __new__(*args, **kwargs):
-        raise TypeError("Class Only classes cannot be instantiated")
-
     classdict = {k: v for k, v in cls.__dict__.items()}
     classdict["_initializing_"] = True
-    classdict["__new__"] = __new__
+    classdict["__new__"] = util.__new__
     new = MetaNamespace(cls.__name__, cls.__bases__, classdict)
     new.nameof = util.KeyGetter(new)
     del new._initializing_

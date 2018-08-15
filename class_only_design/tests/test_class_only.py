@@ -170,6 +170,28 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(X3.x, 1)
         self.assertEqual(X4.y, 2)
 
+    def test_mro(self):
+        # mro should remain unchanged
+        class A:
+            a = 5
+
+        class B:
+            a = 6
+
+        @class_only
+        class OnlyA(A):
+            pass
+
+        @class_only
+        class OnlyB(B):
+            pass
+
+        @class_only
+        class OnlyAB(A, B):
+            pass
+
+        self.fail("wip")
+
     def test_base(self):
         # You can modify the undelying class if you want, using __base__. This isn't by design, but
         # this test exists to illustrate it.

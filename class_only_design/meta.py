@@ -1,9 +1,20 @@
 from class_only_design import constants
 from class_only_design import util
 
+# This is inserted into decorated classes
+@staticmethod
+def __new__(*args, **kwargs):
+    raise TypeError("Class Only classes cannot be instantiated")
+
 
 class OnlyMeta(type):
     def __new__(cls, name, bases, classdict):
+
+        if '__init__' in classdict:
+            raise TypeError("Class Only classes cannot define __init__")
+        if classdict.get('__new__') not in (__new__, None):
+            raise TypeError("Class Only classes cannot define __new__")
+
         # Disallow bases that have __new__ or __init__ defined
         for b in bases:
             if not isinstance(b, cls):
@@ -11,6 +22,9 @@ class OnlyMeta(type):
                     raise TypeError("Class Only classes cannot define __init__", b)
                 if b.__new__ is not object.__new__:
                     raise TypeError("Class Only classes cannot define __new__", b)
+
+        # Insert our own __new__
+        classdict['__new__'] = __new__
         return super().__new__(cls, name, bases, classdict)
 
     def __setattr__(cls, name, arg):
