@@ -49,7 +49,6 @@ class TestNamespace(unittest.TestCase):
         self.assertSequenceEqual(
             iterable_compare(Child), iterable_compare([0, 1, 2, 3])
         )
-        self.fail("simplify this")
 
     def test_constant(self):
         bad_state = 0
@@ -75,21 +74,6 @@ class TestNamespace(unittest.TestCase):
 
         # Namespace classes can tell you their attr names as strings
         self.assertEqual(Valid.nameof.a_long_name, "a_long_name")
-
-    @unittest.skip("Not sure if this is useful")
-    def test_attr_only_namespace(self):
-        # TODO: a strict namespace class can't contain methods (ie, no callables)
-        with self.assertRaises(TypeError):
-
-            class Invalid:
-                def method(*a, **k):
-                    pass
-
-        with self.assertRaises(TypeError):
-
-            @namespace
-            class Invalid:
-                sneaky = lambda: 1
 
     def test_namespace_iteration(self):
         class Regular:

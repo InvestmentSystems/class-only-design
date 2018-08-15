@@ -56,9 +56,6 @@ class MetaNamespace(OnlyMeta):
         seen_attrs = set()
         for c in cls.__mro__:
             if isinstance(c, MetaNamespace):
-                # c is the class created by the namespace decorator, so look one level up to find
-                # the decorated class. This will mean that classes that inherit from namespaces
-                # aren't iterable unless they're @namespace decorated
                 for k, v in vars(c).items():
                     if not util._is_internal(k) and k not in seen_attrs:
                         seen_attrs.add(k)
