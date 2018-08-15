@@ -1,3 +1,5 @@
+import weakref
+
 from class_only_design import constants
 
 
@@ -37,9 +39,13 @@ class KeyGetter:
         """
         KeyGetter takes a class, and provides a __getattr__ that returns keys instead of values
         """
-        self._cls_ = cls
+        # Hold a weakref to cls to avoid a circular reference
+        self._cls_ = weakref.proxy(cls)
 
     def __getattr__(self, attr):
         # Call getattr, so that an exception is raised as normal if the attr doesn't exist
         getattr(self._cls_, attr)
         return attr
+
+    def __dir__(self):
+        return dir(self._cls_)
