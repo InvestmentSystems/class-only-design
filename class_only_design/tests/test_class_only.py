@@ -194,15 +194,3 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(OnlyB.__mro__, (OnlyB, B, object))
         self.assertEqual(OnlyAB.__mro__, (OnlyAB, A, B, object))
 
-    def test_base(self):
-        # You can modify the undelying class if you want, using __base__. This isn't by design, but
-        # this test exists to illustrate it.
-
-        @class_only
-        class X:
-            x = 10
-
-        with self.assertRaises(TypeError):
-            X.x = 5
-        X.__base__.x = 3
-        self.assertEqual(X.x, 3)
