@@ -43,16 +43,15 @@ def namespace(cls):
     """
     Class only is a class decorator that disallows instantiation or state change on a class object.
     """
-    # set updated to an empty iterable. By default wraps attempts to update __dict__, which isn't
-    # valid on a class
-    @functools.wraps(cls, updated=())
-    class NS(cls, metaclass=MetaNamespace):
-        _initializing_ = True
 
-        def __new__(*args, **kwargs):
-            raise TypeError("Class Only classes cannot be instantiated")
+    def __new__(*args, **kwargs):
+        raise TypeError("Class Only classes cannot be instantiated")
 
-        nameof = util.KeyGetter(cls)
+    classdict = {k: v for k, v in cls.__dict__.items()}
+    classdict["_initializing_"] = True
+    classdict["__new__"] = __new__
+    new = MetaNamespace(cls.__name__, cls.__bases__, classdict)
+    new.nameof = util.KeyGetter(new)
+    del new._initializing_
 
-    del NS._initializing_
-    return NS
+    return new

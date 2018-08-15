@@ -44,7 +44,9 @@ class TestNamespace(unittest.TestCase):
         class Child(Valid):
             d = 0
 
-        self.assertSequenceEqual(iterable_compare(Child), iterable_compare([0, 1, 2, 3]))
+        self.assertSequenceEqual(
+            iterable_compare(Child), iterable_compare([0, 1, 2, 3])
+        )
 
     def test_constant(self):
         bad_state = 0
