@@ -56,13 +56,6 @@ class TestClassOnly(unittest.TestCase):
                 def __init__(*a, **k):
                     pass
 
-    def test_wraps(self):
-        # The class is wrapped correctly, such that attributes are preserved
-        class Test(ClassOnly):
-            pass
-
-        self.assertEqual(Test.__name__, "Test")
-
     def test_constant(self):
         bad_state = 0
 
