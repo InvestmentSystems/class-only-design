@@ -5,14 +5,10 @@ from class_only_design.meta import MetaNamespace
 from class_only_design import util
 
 
-def class_only(cls):
+class ClassOnly(metaclass=OnlyMeta):
     """
-    Class only is a class decorator that disallows instantiation or state change on a class object.
+    ClassOnly classes disallow instantiation or state change.
     """
-    classdict = {k: v for k, v in cls.__dict__.items()}
-    new = OnlyMeta(cls.__name__, cls.__bases__, classdict)
-
-    return new
 
 
 class constant:
