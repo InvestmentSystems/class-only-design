@@ -105,11 +105,6 @@ class TestNamespace(unittest.TestCase):
                 class ns(A, Namespace):
                     pass
 
-            # also check inheritance
-            with self.assertRaises(ValueError, msg=name) as f:
-                class B(A):
-                    pass
-
 
 class InheritanceTests(unittest.TestCase):
     """These are the same tests as for class only inheritance"""
