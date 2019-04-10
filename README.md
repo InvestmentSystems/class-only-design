@@ -22,10 +22,9 @@ The `class_only` decorator enforces class only design:
 
 ```python
 
-from class_only_design import class_only
+from class_only_design import ClassOnly
 
-@class_only
-class VeryFunctional:
+class VeryFunctional(ClassOnly):
     attribute = 5
     
     @classmethod
@@ -57,8 +56,7 @@ It'll also prevent you from adding methods that are used to instantiate classes:
 
 ```python
 
-@class_only
-class AwesomeClass:
+class AwesomeClass(ClassOnly):
 
     def __init__(self):
         "Create an awesome instance!"
@@ -72,8 +70,7 @@ _________
 Conceptually, a *class_only* class can have only one state. However, creating that initial state may be expensive, and you may not want to incur that expense at class creation time. For example, consider the following example:
 
 ```python
-@class_only
-class Methodology:
+class Methodology(ClassOnly):
     config = read_large_config_file()
     
     @classmethod
@@ -87,8 +84,7 @@ The time cost of calling `read_large_config_file` is incurred when `Methodology`
 ```python
 from class_only_design import constant
 
-@class_only
-class Methodology:
+class Methodology(ClassOnly):
 
     @constant
     def config(cls)
