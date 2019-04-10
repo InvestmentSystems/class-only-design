@@ -64,3 +64,7 @@ class MetaNamespace(OnlyMeta):
                     if not util._is_internal(k) and k not in seen_attrs:
                         seen_attrs.add(k)
                         yield v
+
+    @classmethod
+    def __prepare__(metacls, name, bases, **kwds):
+        return util.NamespaceLoader()
