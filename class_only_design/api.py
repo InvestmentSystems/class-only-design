@@ -10,6 +10,10 @@ class ClassOnly(metaclass=OnlyMeta):
     ClassOnly classes disallow instantiation or state change.
     """
 
+class Namespace(MetaNamespace):
+    """
+    Namespace classes are intended for storing symbolic constants.
+    """
 
 class constant:
     """
