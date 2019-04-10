@@ -4,6 +4,7 @@ import sys
 from class_only_design import Namespace
 from class_only_design import constant
 from class_only_design import constants
+from class_only_design import autoname
 
 iterable_compare = list
 # In python < 3.6, classes aren't ordered
@@ -192,3 +193,12 @@ class InheritanceTests(unittest.TestCase):
 
         self.assertEqual(X3.x, 1)
         self.assertEqual(X4.y, 2)
+
+    def test_auto_name(self):
+        class A(Namespace):
+            attr = autoname
+            other = autoname
+
+        self.assertEqual(A.attr, 'attr')
+        self.assertEqual(A.other, 'other')
+        self.assertEqual(A.nameof.attr, 'attr')

@@ -49,3 +49,10 @@ class KeyGetter:
 
     def __dir__(self):
         return sorted(vars(self._cls_))
+
+
+class NamespaceLoader(dict):
+    def __setitem__(self, k, v):
+        if v is constants.autoname:
+            return super().__setitem__(k, k)
+        return super().__setitem__(k, v)
