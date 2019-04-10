@@ -48,7 +48,11 @@ class MetaNamespace(OnlyMeta):
             raise ValueError(
                 "Cannot create namespace class with reserved names", sorted(bad_names)
             )
-        return super().__new__(cls, name, bases, classdict)
+        classdict['_initializing_'] = True
+        created_class = super().__new__(cls, name, bases, classdict)
+        created_class.nameof = util.KeyGetter(created_class)
+        del created_class._initializing_
+        return created_class
 
     def __iter__(cls):
         # Walk up the mro, looking for namespace classes. Keep track of attrs we've already seen
