@@ -32,15 +32,3 @@ class constant:
         return self._value
 
 
-def namespace(cls):
-    """
-    Class only is a class decorator that disallows instantiation or state change on a class object.
-    """
-
-    classdict = {k: v for k, v in cls.__dict__.items()}
-    classdict["_initializing_"] = True
-    new = MetaNamespace(cls.__name__, cls.__bases__, classdict)
-    new.nameof = util.KeyGetter(new)
-    del new._initializing_
-
-    return new
