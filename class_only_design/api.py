@@ -5,15 +5,15 @@ from class_only_design.meta import MetaNamespace
 from class_only_design import util
 
 
-def class_only(cls):
+class ClassOnly(metaclass=OnlyMeta):
     """
-    Class only is a class decorator that disallows instantiation or state change on a class object.
+    ClassOnly classes disallow instantiation or state change.
     """
-    classdict = {k: v for k, v in cls.__dict__.items()}
-    new = OnlyMeta(cls.__name__, cls.__bases__, classdict)
 
-    return new
-
+class Namespace(metaclass=MetaNamespace):
+    """
+    Namespace classes are intended for storing symbolic constants.
+    """
 
 class constant:
     """
@@ -32,15 +32,3 @@ class constant:
         return self._value
 
 
-def namespace(cls):
-    """
-    Class only is a class decorator that disallows instantiation or state change on a class object.
-    """
-
-    classdict = {k: v for k, v in cls.__dict__.items()}
-    classdict["_initializing_"] = True
-    new = MetaNamespace(cls.__name__, cls.__bases__, classdict)
-    new.nameof = util.KeyGetter(new)
-    del new._initializing_
-
-    return new

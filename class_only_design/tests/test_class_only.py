@@ -6,7 +6,7 @@
 
 import unittest
 
-from class_only_design import class_only
+from class_only_design import ClassOnly
 from class_only_design import constant
 
 
@@ -16,8 +16,8 @@ class TestClassOnly(unittest.TestCase):
     def test_class_only(self):
         """Test something."""
 
-        @class_only
-        class ValidTest:
+
+        class ValidTest(ClassOnly):
             CONSTANT = 5
 
             @classmethod
@@ -46,25 +46,15 @@ class TestClassOnly(unittest.TestCase):
         # Class only classes can't specify __new__ or __init__
         with self.assertRaises(TypeError):
 
-            @class_only
-            class Invalid:
+            class Invalid(ClassOnly):
                 def __new__(*a, **k):
                     pass
 
         with self.assertRaises(TypeError):
 
-            @class_only
-            class Invalid:
+            class Invalid(ClassOnly):
                 def __init__(*a, **k):
                     pass
-
-    def test_wraps(self):
-        # The class is wrapped correctly, such that attributes are preserved
-        @class_only
-        class Test:
-            pass
-
-        self.assertEqual(Test.__name__, "Test")
 
     def test_constant(self):
         bad_state = 0
@@ -83,11 +73,9 @@ class TestClassOnly(unittest.TestCase):
 
     def test_inheritance_decorated(self):
         # test case where both classes have the @class_only decorator
-        @class_only
-        class X:
+        class X(ClassOnly):
             x = 10
 
-        @class_only
         class X1(X):
             y = 10
             x = 11
@@ -98,8 +86,7 @@ class TestClassOnly(unittest.TestCase):
 
     def test_inheritance_parent_decorated(self):
         # test case where only parent class has the @class_only decorator
-        @class_only
-        class X:
+        class X(ClassOnly):
             x = 10
 
         class X1(X):
@@ -123,8 +110,7 @@ class TestClassOnly(unittest.TestCase):
             x = 10
             y = 10
 
-        @class_only
-        class X1(X):
+        class X1(X, ClassOnly):
             y = 10
 
         self.assertEqual(X.x, 10)
@@ -146,8 +132,7 @@ class TestClassOnly(unittest.TestCase):
 
     def test_multiple_inheritance(self):
         # if a class only class is used as a mixin, what should happen?
-        @class_only
-        class X:
+        class X(ClassOnly):
             x = 10
 
         class X1:
@@ -170,26 +155,3 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(X3.x, 1)
         self.assertEqual(X4.y, 2)
 
-    def test_mro(self):
-        # Decorating doesn't change mro
-        class A:
-            a = 5
-
-        class B:
-            a = 6
-
-        @class_only
-        class OnlyA(A):
-            pass
-
-        @class_only
-        class OnlyB(B):
-            pass
-
-        @class_only
-        class OnlyAB(A, B):
-            pass
-
-        self.assertEqual(OnlyA.__mro__, (OnlyA, A, object))
-        self.assertEqual(OnlyB.__mro__, (OnlyB, B, object))
-        self.assertEqual(OnlyAB.__mro__, (OnlyAB, A, B, object))

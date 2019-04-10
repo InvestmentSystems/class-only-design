@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-from class_only_design import namespace
+from class_only_design import Namespace
 from class_only_design import constant
 from class_only_design import constants
 
@@ -15,8 +15,7 @@ class TestNamespace(unittest.TestCase):
     def test_namespace(self):
         # a base class for classes intended to hold constants
 
-        @namespace
-        class Valid:
+        class Valid(Namespace):
             a = 1
             b = 2
             c = 3
@@ -42,7 +41,6 @@ class TestNamespace(unittest.TestCase):
             iterable_compare(Child), iterable_compare([0, 1, 2, 3])
         )
 
-        @namespace
         class Child(Valid):
             d = 0
 
@@ -53,8 +51,7 @@ class TestNamespace(unittest.TestCase):
     def test_constant(self):
         bad_state = 0
 
-        @namespace
-        class A:
+        class A(Namespace):
             @constant
             def a(cls):
                 nonlocal bad_state
@@ -65,8 +62,7 @@ class TestNamespace(unittest.TestCase):
         self.assertEqual(A.a, 6)
 
     def test_nameof(self):
-        @namespace
-        class Valid:
+        class Valid(Namespace):
             a_long_name = 1
 
         with self.assertRaises(AttributeError) as e:
@@ -80,8 +76,7 @@ class TestNamespace(unittest.TestCase):
             a = 1
             b = 2
 
-        @namespace
-        class N(Regular):
+        class N(Regular, Namespace):
             c = 5
             d = 3
             b = 3
@@ -89,7 +84,6 @@ class TestNamespace(unittest.TestCase):
         # Namespace classes only iterate over namespace classes
         self.assertSequenceEqual(iterable_compare(N), iterable_compare([5, 3, 3]))
 
-        @namespace
         class N2(N):
             b = 4
             g = 5
@@ -108,13 +102,7 @@ class TestNamespace(unittest.TestCase):
 
             # I'm using ValueError because that's what namedtuple uses if an invalid name is used
             with self.assertRaises(ValueError, msg=name) as e:
-                namespace(A)
-
-            # also check inheritance
-            with self.assertRaises(ValueError, msg=name) as f:
-
-                @namespace
-                class B(A):
+                class ns(A, Namespace):
                     pass
 
 
@@ -123,12 +111,10 @@ class InheritanceTests(unittest.TestCase):
 
     def test_inheritance_decorated(self):
         # test case where both classes have the @namespace decorator
-        @namespace
-        class X:
+        class X(Namespace):
             x = 10
 
-        @namespace
-        class X1(X):
+        class X1(X, Namespace):
             y = 10
             x = 11
 
@@ -138,8 +124,7 @@ class InheritanceTests(unittest.TestCase):
 
     def test_inheritance_parent_decorated(self):
         # test case where only parent class has the @namespace decorator
-        @namespace
-        class X:
+        class X(Namespace):
             x = 10
 
         class X1(X):
@@ -163,8 +148,7 @@ class InheritanceTests(unittest.TestCase):
             x = 10
             y = 10
 
-        @namespace
-        class X1(X):
+        class X1(X, Namespace):
             y = 10
 
         self.assertEqual(X.x, 10)
@@ -186,8 +170,7 @@ class InheritanceTests(unittest.TestCase):
 
     def test_multiple_inheritance(self):
         # if a namespace class is used as a mixin, what should happen?
-        @namespace
-        class X:
+        class X(Namespace):
             x = 10
 
         class X1:
