@@ -23,14 +23,13 @@ class constant:
     is only called once. Subsequent calls simply return the stored value. This is usefull for
     declaring a class level constant that is not actually created until it's used.
     """
+    _has_not_been_called = object()
 
     def __init__(self, method):
         self.method = method
-        self._value = None
+        self._value = self._has_not_been_called
 
     def __get__(self, instance, cls):
-        if not self._value:
+        if self._value is self._has_not_been_called:
             self._value = self.method(cls)
         return self._value
-
-
