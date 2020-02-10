@@ -51,6 +51,7 @@ class TestNamespace(unittest.TestCase):
 
     def test_constant(self):
         bad_state = 0
+        num_of_calls = 0
 
         class A(Namespace):
             @constant
@@ -59,8 +60,22 @@ class TestNamespace(unittest.TestCase):
                 bad_state += 1
                 return 5 + bad_state
 
+            @constant
+            def no_return_value(cls):
+                nonlocal num_of_calls
+                num_of_calls += 1
+
+            @classmethod
+            def b(cls):
+                cls.no_return_value
+                return 5
+
         self.assertEqual(A.a, 6)
         self.assertEqual(A.a, 6)
+        self.assertEqual(bad_state, 1)
+        self.assertEqual(A.b(), 5)
+        self.assertEqual(A.b(), 5)
+        self.assertEqual(num_of_calls, 1)
 
     def test_nameof(self):
         class Valid(Namespace):
