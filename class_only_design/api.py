@@ -30,7 +30,6 @@ class constant:
         self._value = self._has_not_been_called
 
     def __get__(self, instance, cls):
-        if self._value is constant._has_not_been_called:
+        if self._value is self._has_not_been_called:
             self._value = self.method(cls)
         return self._value
-
