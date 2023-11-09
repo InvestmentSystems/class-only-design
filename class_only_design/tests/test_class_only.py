@@ -155,3 +155,32 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(X3.x, 1)
         self.assertEqual(X4.y, 2)
 
+    def test_class_only_subclasses_can_accept_kwargs(self) -> None:
+
+        class MyClass(ClassOnly):
+            @classmethod
+            def __init_subclass__(cls, **kwargs):
+                super().__init_subclass__()
+
+                assert kwargs == dict(kwarg1=1, kwarg2=2)
+
+        class MySubclass(MyClass, kwarg1=1, kwarg2=2):
+            pass
+
+    def test_class_only_immediate_subclass_accepts_no_kwargs(self) -> None:
+        with self.assertRaises(TypeError):
+            class InvalidKwargPassedToClassOnlySubclass(ClassOnly, kwarg1=1):
+                pass
+
+
+    def test_class_only_immediate_subclass_cannot_forward_kwargs(self) -> None:
+        class MyClass(ClassOnly):
+            @classmethod
+            def __init_subclass__(cls, **kwargs):
+                assert kwargs == dict(kwarg1=1, kwarg2=2)
+
+                with self.assertRaises(TypeError):
+                    super().__init_subclass__(**kwargs)
+
+        class MySubclass(MyClass, kwarg1=1, kwarg2=2):
+            pass
