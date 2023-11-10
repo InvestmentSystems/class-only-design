@@ -11,7 +11,7 @@ def __new__(*args, **kwargs):
 
 
 class OnlyMeta(type):
-    def __new__(cls, name, bases, classdict):
+    def __new__(cls, name, bases, classdict, **kwargs):
 
         if "__init__" in classdict:
             raise TypeError("Class Only classes cannot define __init__")
@@ -28,7 +28,7 @@ class OnlyMeta(type):
 
         # Insert our own __new__
         classdict["__new__"] = __new__
-        return super().__new__(cls, name, bases, classdict)
+        return super().__new__(cls, name, bases, classdict, **kwargs)
 
     def __setattr__(cls, name, arg):
         if not getattr(cls, "_initializing_", False):

@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# diff files
+*.diff
+
 # C extensions
 *.so
 
