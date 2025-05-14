@@ -20,9 +20,10 @@ class Namespace(metaclass=MetaNamespace):
 class constant:
     """
     A method decorator similar to @property but for use on class only classes. The decorated method
-    is only called once. Subsequent calls simply return the stored value. This is usefull for
+    is only called once. Subsequent calls simply return the stored value. This is useful for
     declaring a class level constant that is not actually created until it's used.
     """
+
     _has_not_been_called = object()
 
     def __init__(self, method):
