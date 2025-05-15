@@ -72,11 +72,9 @@ class TestClassOnly(unittest.TestCase):
             A.a = ""
 
     def test_constant_no_use_without_class_only(self):
-        # Problem: constant cannot prevent setting on classes, because __set__ isn't
-        # called for classes.
-
-        # Solutions:
-        # - Disallow using constant with non class_only classes (in __set_name__)
+        # constant cannot prevent setting on classes, because __set__ isn't called for
+        # classes. For this reason, we disallow using constant with non class_only
+        # classes.
 
         with self.assertRaises(TypeError):
 
