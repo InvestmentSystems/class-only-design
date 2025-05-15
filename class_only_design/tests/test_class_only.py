@@ -70,6 +70,24 @@ class TestClassOnly(unittest.TestCase):
         self.assertEqual(A.a, 6)
         self.assertEqual(a.a, 6)
 
+    def test_constant_no_set(self):
+
+        class Class:
+            @constant
+            def class_name(cls):
+                return cls.__name__
+
+        instance = Class()
+
+        assert Class.class_name == "Class"
+        assert instance.class_name == "Class"
+
+        with self.assertRaises(AttributeError):
+            instance.class_name = ""
+
+        with self.assertRaises(AttributeError):
+            Class.class_name = ""
+
     def test_constant_inheritance(self):
 
         class A:
