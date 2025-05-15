@@ -32,13 +32,12 @@ class constant:
         self._values = {}
 
     def __set_name__(self, owner, name):
-        self.owner = owner
-        self.name = name
+        if not isinstance(owner, OnlyMeta):
+            raise TypeError(
+                f"{type(self).__name__} can only be used with ClassOnly classes"
+            )
 
     def __get__(self, instance, cls):
         if cls not in self._values:
             self._values[cls] = self.method(cls)
         return self._values[cls]
-
-    def __set__(self, owner, value):
-        raise AttributeError("")

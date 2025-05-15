@@ -58,39 +58,36 @@ class TestClassOnly(unittest.TestCase):
     def test_constant(self):
         bad_state = 0
 
-        class A:
+        class A(ClassOnly):
             @constant
             def a(cls):
                 nonlocal bad_state
                 bad_state += 1
                 return 5 + bad_state
 
-        a = A()
         self.assertEqual(A.a, 6)
         self.assertEqual(A.a, 6)
-        self.assertEqual(a.a, 6)
 
-    def test_constant_no_set(self):
+        with self.assertRaises(TypeError):
+            A.a = ""
 
-        class Class:
-            @constant
-            def class_name(cls):
-                return cls.__name__
+    def test_constant_no_use_without_class_only(self):
+        # Problem: constant cannot prevent setting on classes, because __set__ isn't
+        # called for classes.
 
-        instance = Class()
+        # Solutions:
+        # - Disallow using constant with non class_only classes (in __set_name__)
 
-        assert Class.class_name == "Class"
-        assert instance.class_name == "Class"
+        with self.assertRaises(TypeError):
 
-        with self.assertRaises(AttributeError):
-            instance.class_name = ""
-
-        with self.assertRaises(AttributeError):
-            Class.class_name = ""
+            class Class:
+                @constant
+                def class_name(cls):
+                    return cls.__name__
 
     def test_constant_inheritance(self):
 
-        class A:
+        class A(ClassOnly):
 
             @constant
             def name(cls):
