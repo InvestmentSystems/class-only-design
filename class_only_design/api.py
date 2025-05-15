@@ -18,10 +18,10 @@ class Namespace(metaclass=MetaNamespace):
 
 
 class constant:
-    """
-    A method decorator similar to @property but for use on class only classes. The decorated method
-    is only called once. Subsequent calls simply return the stored value. This is useful for
-    declaring a class level constant that is not actually created until it's used.
+    """A method decorator similar to @property but for use on class only classes. The
+    decorated method is only called once per class. Subsequent calls simply return the
+    stored value. This is useful for declaring a class level constant that is not
+    actually created until it's used.
 
     Note that using @constant implies a classmethod. You don't need to also apply the
     classmethod decorator
