@@ -76,7 +76,8 @@ class TestClassOnly(unittest.TestCase):
         # classes. For this reason, we disallow using constant with non class_only
         # classes.
 
-        with self.assertRaises(TypeError):
+        # In python3.11, ANY exception in __set_name__ result in RuntimeError.
+        with self.assertRaises((TypeError, RuntimeError)):
 
             class Class:
                 @constant
