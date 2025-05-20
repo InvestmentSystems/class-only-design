@@ -16,7 +16,6 @@ class TestClassOnly(unittest.TestCase):
     def test_class_only(self):
         """Test something."""
 
-
         class ValidTest(ClassOnly):
             CONSTANT = 5
 
@@ -59,17 +58,48 @@ class TestClassOnly(unittest.TestCase):
     def test_constant(self):
         bad_state = 0
 
-        class A:
+        class A(ClassOnly):
             @constant
             def a(cls):
                 nonlocal bad_state
                 bad_state += 1
                 return 5 + bad_state
 
-        a = A()
         self.assertEqual(A.a, 6)
         self.assertEqual(A.a, 6)
-        self.assertEqual(a.a, 6)
+
+        with self.assertRaises(TypeError):
+            A.a = ""
+
+    def test_constant_no_use_without_class_only(self):
+        # constant cannot prevent setting on classes, because __set__ isn't called for
+        # classes. For this reason, we disallow using constant with non class_only
+        # classes.
+
+        with self.assertRaises(TypeError):
+
+            class Class:
+                @constant
+                def class_name(cls):
+                    return cls.__name__
+
+    def test_constant_inheritance(self):
+
+        class A(ClassOnly):
+
+            @constant
+            def name(cls):
+                return cls.__name__
+
+        class B(A):
+            pass
+
+        class C(A):
+            pass
+
+        assert A.name == "A"
+        assert B.name == "B"
+        assert C.name == "C"
 
     def test_inheritance_decorated(self):
         # test case where both classes have the @class_only decorator
@@ -169,9 +199,9 @@ class TestClassOnly(unittest.TestCase):
 
     def test_class_only_immediate_subclass_accepts_no_kwargs(self) -> None:
         with self.assertRaises(TypeError):
+
             class InvalidKwargPassedToClassOnlySubclass(ClassOnly, kwarg1=1):
                 pass
-
 
     def test_class_only_immediate_subclass_cannot_forward_kwargs(self) -> None:
         class MyClass(ClassOnly):
