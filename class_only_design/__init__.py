@@ -4,7 +4,7 @@
 
 __author__ = """Tom Rutherford"""
 __email__ = "foreverwintr@gmail.com"
-__version__ = "0.3.0"
+__version__ = "1.0.0"
 
 from class_only_design.api import ClassOnly
 from class_only_design.api import Namespace

@@ -25,3 +25,4 @@ proj.file-list = [loc('setup.py'),
 proj.file-type = 'shared'
 testing.auto-test-file-specs = (('glob',
                                  'test_*.py'),)
+testing.test-framework = {None: ':internal pytest'}
